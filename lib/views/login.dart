@@ -104,14 +104,14 @@ class _LoginState extends State<Login> {
                     ],
                   ),
                 ),
-                SizedBox(height: 40),
+                SizedBox(height: 10),
                 CustomButton(
                   onTap: () {
                     navigateToHome();
                   },
                 ),
                 SizedBox(
-                  height: 50,
+                  height: 10,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),

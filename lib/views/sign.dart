@@ -46,14 +46,14 @@ class _SignUpState extends State<Sign> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: 20),
+                  SizedBox(height: 0),
                   Image.asset(
                     'assets/logo.png',
                     height: 90,
                     color: Colors.deepPurple,
                   ),
                   SizedBox(
-                    height: 20,
+                    height: 0,
                   ),
                   Text(
                     "Welcome!!",
@@ -63,7 +63,7 @@ class _SignUpState extends State<Sign> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 0),
                   CustomTextField(
                       controller: usernameController,
                       hintText: 'John Doe',
@@ -75,7 +75,7 @@ class _SignUpState extends State<Sign> {
                         }
                         return null;
                       }),
-                  SizedBox(height: 20),
+                  SizedBox(height: 0),
                   CustomTextField(
                       controller: emailController,
                       hintText: 'Email',
@@ -90,7 +90,7 @@ class _SignUpState extends State<Sign> {
                         }
                         return null;
                       }),
-                  SizedBox(height: 20),
+                  SizedBox(height: 0),
                   CustomTextField(
                       controller: passwordController,
                       hintText: 'Password',
@@ -114,7 +114,7 @@ class _SignUpState extends State<Sign> {
                         }
                         return null;
                       }),
-                  SizedBox(height: 20),
+                  SizedBox(height: 0),
                   CustomTextField(
                       controller: password2Controller,
                       hintText: 'Confirm Password',
@@ -129,13 +129,13 @@ class _SignUpState extends State<Sign> {
                         }
                         return null;
                       }),
-                  SizedBox(height: 20),
-                  CustomButton(
-                    onTap: () {
-                      _submitForm();
-                    },
-                  ),
-                  SizedBox(height: 50),
+                  SizedBox(height: 00),
+                  ElevatedButton(
+                      onPressed: () {
+                        _submitForm();
+                      },
+                      child: Text('Login')),
+                  SizedBox(height: 0),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: Row(
