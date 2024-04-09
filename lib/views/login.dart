@@ -24,12 +24,7 @@ class _LoginState extends State<Login> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool _obscureText = true;
-  void _visibility() {
-    setState(() {
-      _obscureText = !_obscureText;
-    });
-  }
+  bool _obscureText = true; // Initial state for text visibility
 
   @override
   Widget build(BuildContext context) {
@@ -65,8 +60,8 @@ class _LoginState extends State<Login> {
                 CustomTextField(
                     controller: emailController,
                     hintText: 'Email',
-                    suffixIcon: Icon(null),
-                    prefixIcon: Icon(Icons.person),
+                    suffixIcon: null,
+                    prefixIcon: null,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your email';
@@ -78,16 +73,22 @@ class _LoginState extends State<Login> {
                     }),
                 SizedBox(height: 20),
                 CustomTextField(
-                    controller: passwordController,
-                    hintText: 'Password',
-                    suffixIcon: Icon(null),
-                    prefixIcon: Icon(Icons.person),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your password';
-                      }
-                      return null;
-                    }),
+                  controller: passwordController,
+                  hintText: 'Password',
+                  obscureText: _obscureText, // Pass the visibility state
+                  suffixIcon: _obscureText
+                      ? Icons.visibility
+                      : Icons
+                          .visibility_off, // Change the icon based on visibility state
+                  onSuffixIconPressed:
+                      _togglePasswordVisibility, // Toggle visibility on icon press
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your password';
+                    }
+                    return null;
+                  },
+                ),
                 SizedBox(height: 20),
                 SizedBox(height: 15),
                 Padding(
@@ -105,11 +106,7 @@ class _LoginState extends State<Login> {
                   ),
                 ),
                 SizedBox(height: 10),
-                CustomButton(
-                  onTap: () {
-                    navigateToHome();
-                  },
-                ),
+                ElevatedButton(onPressed: _login, child: Text("Login")),
                 SizedBox(
                   height: 10,
                 ),
@@ -201,7 +198,7 @@ class _LoginState extends State<Login> {
       final String password = passwordController.text;
 
       // Your login API endpoint URL
-      final String apiUrl = 'http://10.0.2.2:8000/customers/login/';
+      final String apiUrl = 'http://127.0.0.1:8000/customers/login/';
 
       // Prepare the login data
       final Map<String, dynamic> loginData = {
@@ -260,5 +257,11 @@ class _LoginState extends State<Login> {
     // validation using RegExp
     final RegExp emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
     return emailRegex.hasMatch(email);
+  }
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
   }
 }
