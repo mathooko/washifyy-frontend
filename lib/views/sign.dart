@@ -25,11 +25,16 @@ class _SignUpState extends State<Sign> {
   TextEditingController password2Controller = TextEditingController();
   TextEditingController emailController = TextEditingController();
 
-  bool _obscureText = true;
+  bool _obscureText1 = true;
+  bool _obscureText2 = true;
 
-  void _togglePasswordVisibility() {
+  void _togglePasswordVisibility(int fieldNumber) {
     setState(() {
-      _obscureText = !_obscureText;
+      if (fieldNumber == 1) {
+        _obscureText1 = !_obscureText1;
+      } else {
+        _obscureText2 = !_obscureText2;
+      }
     });
   }
 
@@ -67,8 +72,8 @@ class _SignUpState extends State<Sign> {
                   CustomTextField(
                       controller: usernameController,
                       hintText: 'John Doe',
-                      suffixIcon: Icon(null),
-                      prefixIcon: Icon(Icons.person),
+                      suffixIcon: null,
+                      prefixIcon: null,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your name';
@@ -79,8 +84,8 @@ class _SignUpState extends State<Sign> {
                   CustomTextField(
                       controller: emailController,
                       hintText: 'Email',
-                      suffixIcon: Icon(null),
-                      prefixIcon: Icon(Icons.mail),
+                      suffixIcon: null,
+                      prefixIcon: null,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your email';
@@ -94,8 +99,14 @@ class _SignUpState extends State<Sign> {
                   CustomTextField(
                       controller: passwordController,
                       hintText: 'Password',
-                      suffixIcon: Icon(null),
-                      prefixIcon: Icon(Icons.lock),
+                      obscureText: _obscureText1,
+                      suffixIcon: _obscureText1
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                      onSuffixIconPressed: () {
+                        _togglePasswordVisibility(1);
+                      },
+                      prefixIcon: Icons.lock,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your password';
@@ -118,8 +129,14 @@ class _SignUpState extends State<Sign> {
                   CustomTextField(
                       controller: password2Controller,
                       hintText: 'Confirm Password',
-                      suffixIcon: Icon(null),
-                      prefixIcon: Icon(Icons.lock),
+                      obscureText: _obscureText2,
+                      suffixIcon: _obscureText2
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                      onSuffixIconPressed: () {
+                        _togglePasswordVisibility(2);
+                      },
+                      prefixIcon: Icons.lock,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please confirm your password';
@@ -190,7 +207,7 @@ class _SignUpState extends State<Sign> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          _submitForm();
+                          navigateToLogin();
                         },
                         child: Text(
                           'Login',
@@ -235,7 +252,7 @@ class _SignUpState extends State<Sign> {
       String jsonData = jsonEncode(userData);
 
       // Convert your backend API URL string to a Uri object
-      var apiUrl = Uri.parse("http://10.0.0.1:8000/customers/signup/");
+      var apiUrl = Uri.parse("http://127.0.0.1:8000/customers/signup/");
 
       // Make a POST request to your Django backend API
       try {
