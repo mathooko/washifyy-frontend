@@ -13,7 +13,7 @@ class Routes {
     GetPage(name: "/", page: () => Login()),
     GetPage(name: "/home", page: () => Home()),
     GetPage(name: "/checkout", page: () => Checkout()),
-    GetPage(name: "/donations", page: () => Donations()),
+    GetPage(name: "/donations", page: () => Donations(orderItems: [],)),
     GetPage(name: "/dashboard", page: () => Dashboard()),
     GetPage(name: "/sign", page: () => Sign()),
   ];

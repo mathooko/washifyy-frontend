@@ -1,253 +1,180 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:washifyy/configs/constants.dart';
-import 'package:washifyy/customs/customtextfield.dart';
+import 'package:intl/intl.dart';
 
-class Dashboard extends StatefulWidget {
-  Dashboard({super.key});
-
-  @override
-  State<Dashboard> createState() => _DashboardState();
-}
-
-class _DashboardState extends State<Dashboard> {
+class Dashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    TextEditingController searchController = TextEditingController();
+    // Get the current date
+    String currentDate = DateFormat.yMMMMd().format(DateTime.now());
+
     return Scaffold(
       backgroundColor: Colors.deepPurple[600],
       body: SafeArea(
-          child: Positioned.fill(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 25),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        children: [
-                          Text(
-                            'Hi, Waribu!',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(height: 5),
-                          Text(
-                            '20 Mar, 2024',
-                            style: TextStyle(color: Colors.deepPurple[50]),
-                          ),
-                        ],
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.deepPurple[400],
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        padding: EdgeInsets.all(12),
-                        child: Icon(
-                          Icons.notifications,
-                          color: Colors.white,
-                        ),
-                      )
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  Container(
-                    decoration: BoxDecoration(
-                        color: Colors.deepPurple[200],
-                        borderRadius: BorderRadius.circular(12)),
-                    padding: EdgeInsets.all(12),
-                    child: Row(children: [
-                      Icon(
-                        Icons.search,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Hi, Waribu!',
+                      style: TextStyle(
                         color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
                       ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Text(
-                        'Search',
-                        style: TextStyle(color: Colors.white),
-                      )
-                    ]),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    'Which laundry service do you want today?',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w300),
-                  ),
-                ],
+                    ),
+                    SizedBox(height: 5),
+                    Text(
+                      currentDate,
+                      style: TextStyle(color: Colors.deepPurple[50]),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            SizedBox(
-              height: 0,
-            ),
-            Expanded(
-              child: Container(
+              Container(
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(45),
-                        topRight: Radius.circular(45)),
-                    color: Colors.deepPurple[50]),
-                padding: EdgeInsets.all(15),
-                //color: Colors.deepPurple[50],
-                child: Center(
-                  child: Column(
-                    children: [
-                      Row(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             'Services',
                             style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 20),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
                           ),
                           Icon(Icons.more_horiz)
                         ],
                       ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    ),
+                    GridView.count(
+                      shrinkWrap: true,
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 20,
+                      mainAxisSpacing: 20,
+                      padding: EdgeInsets.all(20),
+                      children: [
+                        _buildServiceCard(
+                          icon: Icons.local_laundry_service,
+                          label: 'Wash and Fold',
+                          color: Colors.deepPurple,
+                        ),
+                        _buildServiceCard(
+                          icon: Icons.iron,
+                          label: 'Wash and Iron',
+                          color: Colors.deepPurple,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(12)),
-                            height: 150,
-                            width: 150,
-                            child: Column(
-                              children: [
-                                Image.asset(
-                                  'assets/machine.png',
-                                  height: 100,
-                                  width: 100,
-                                  color: Colors.deepPurple,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Text('Clothing'),
-                                    ],
-                                  ),
-                                )
-                              ],
+                          Text(
+                            'Current Order',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
                             ),
                           ),
-                          Container(
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(12)),
-                            height: 150,
-                            width: 150,
-                            child: Column(
-                              children: [
-                                Image.asset(
-                                  'assets/pasi.png',
-                                  height: 100,
-                                  width: 100,
-                                  color: Colors.deepPurple,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Text('Ironing'),
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
+                          SizedBox(height: 10),
+                          ListView(
+                            shrinkWrap: true,
+                            padding: EdgeInsets.zero,
+                            children: [
+                              _buildOrderItem(
+                                itemName: 'Item 1',
+                                quantity: 2,
+                              ),
+                              _buildOrderItem(
+                                itemName: 'Item 2',
+                                quantity: 1,
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                      SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(12)),
-                            height: 150,
-                            width: 150,
-                            child: Column(
-                              children: [
-                                Image.asset(
-                                  'assets/duvet.png',
-                                  color: Colors.deepPurple,
-                                  height: 100,
-                                  width: 100,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Text('Beddings'),
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(12)),
-                            height: 150,
-                            width: 150,
-                            child: Column(
-                              children: [
-                                Image.asset(
-                                  'assets/shoes.png',
-                                  height: 100,
-                                  width: 100,
-                                  color: Colors.deepPurple,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Text('Shoes'),
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      )
-                    ],
-                  ),
+                    ),
+                    SizedBox(height: 20),
+                  ],
                 ),
               ),
-            )
-          ],
+            ],
+          ),
         ),
-      )),
+      ),
+    );
+  }
+
+  Widget _buildServiceCard({
+    required IconData icon,
+    required String label,
+    required Color color,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            icon,
+            size: 50,
+            color: color,
+          ),
+          SizedBox(height: 10),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOrderItem({
+    required String itemName,
+    required int quantity,
+  }) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 5),
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.deepPurple,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: ListTile(
+        title: Text(
+          itemName,
+          style: TextStyle(color: Colors.white),
+        ),
+        subtitle: Text(
+          'Quantity: $quantity',
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
     );
   }
 }

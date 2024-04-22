@@ -10,7 +10,7 @@ HomeController homeController = Get.put(HomeController());
 var Screens = [
   Dashboard(),
   Checkout(),
-  Donations(),
+  Donations(orderItems: [],),
 ];
 
 class Home extends StatelessWidget {
