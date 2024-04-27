@@ -1,7 +1,42 @@
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-class Dashboard extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class Dashboard extends StatefulWidget {
+  @override
+  State<Dashboard> createState() => _DashboardState();
+}
+
+class _DashboardState extends State<Dashboard> {
+  late Map<String, dynamic> username = {};
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUsername();
+  }
+
+  Future<void> fetchUsername() async {
+    try {
+      final String? name = await getUsername();
+      if (name != null) {
+        setState(() {
+          username['username'] = name;
+        });
+      }
+    } catch (error) {
+      print('Error fetching username: $error');
+    }
+  }
+
+  Future<String?> getUsername() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('username');
+  }
+
   @override
   Widget build(BuildContext context) {
     // Get the current date
@@ -20,7 +55,7 @@ class Dashboard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Hi, Waribu!',
+                      'Hi, ${username['username']}',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -51,7 +86,7 @@ class Dashboard extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Services',
+                            'Click to start',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 20,
@@ -63,53 +98,22 @@ class Dashboard extends StatelessWidget {
                     ),
                     GridView.count(
                       shrinkWrap: true,
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 20,
-                      mainAxisSpacing: 20,
-                      padding: EdgeInsets.all(20),
+                      crossAxisCount: 1,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                      padding: EdgeInsets.all(50),
                       children: [
-                        _buildServiceCard(
-                          icon: Icons.local_laundry_service,
-                          label: 'Wash and Fold',
-                          color: Colors.deepPurple,
-                        ),
-                        _buildServiceCard(
-                          icon: Icons.iron,
-                          label: 'Wash and Iron',
-                          color: Colors.deepPurple,
+                        GestureDetector(
+                          onTap: () {
+                            navigateToOrder();
+                          },
+                          child: _buildServiceCard(
+                            icon: Icons.local_laundry_service,
+                            label: 'Laundry',
+                            color: Colors.deepPurple,
+                          ),
                         ),
                       ],
-                    ),
-                    SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Current Order',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          ListView(
-                            shrinkWrap: true,
-                            padding: EdgeInsets.zero,
-                            children: [
-                              _buildOrderItem(
-                                itemName: 'Item 1',
-                                quantity: 2,
-                              ),
-                              _buildOrderItem(
-                                itemName: 'Item 2',
-                                quantity: 1,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
                     ),
                     SizedBox(height: 20),
                   ],
@@ -176,5 +180,9 @@ class Dashboard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void navigateToOrder() {
+    Get.toNamed("/order");
   }
 }

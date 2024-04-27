@@ -24,7 +24,7 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      style: TextStyle(color: Colors.white),
+      style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
       controller: controller,
       obscureText: obscureText,
       onChanged: onChanged,
@@ -44,17 +44,23 @@ class CustomTextField extends StatelessWidget {
         border: OutlineInputBorder(
           borderRadius:
               BorderRadius.circular(10.0), // Adjust the radius as needed
-          borderSide: BorderSide(color: Colors.white), // Set white border color
+          borderSide: BorderSide(
+              color:
+                  const Color.fromARGB(255, 0, 0, 0)), // Set white border color
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius:
               BorderRadius.circular(10.0), // Adjust the radius as needed
-          borderSide: BorderSide(color: Colors.white), // Set white border color
+          borderSide: BorderSide(
+              color:
+                  const Color.fromARGB(255, 0, 0, 0)), // Set white border color
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius:
               BorderRadius.circular(10.0), // Adjust the radius as needed
-          borderSide: BorderSide(color: Colors.white), // Set white border color
+          borderSide: BorderSide(
+              color:
+                  const Color.fromARGB(255, 0, 0, 0)), // Set white border color
         ),
         // You can customize more properties as needed
       ),

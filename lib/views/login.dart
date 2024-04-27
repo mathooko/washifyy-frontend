@@ -1,17 +1,11 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
 import 'dart:convert';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/response/response.dart';
 import 'package:http/http.dart' as http;
-import 'package:washifyy/configs/constants.dart';
-import 'package:washifyy/customs/custombutton.dart';
 import 'package:washifyy/customs/customtextfield.dart';
 import 'package:washifyy/customs/squaretile.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   Login({super.key});
@@ -29,7 +23,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 41, 41, 41),
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
       body: SafeArea(
         child: Center(
           child: Form(
@@ -50,7 +44,7 @@ class _LoginState extends State<Login> {
                 Text(
                   "Welcome back!!",
                   style: TextStyle(
-                      color: const Color.fromARGB(255, 255, 255, 255),
+                      color: Color.fromARGB(255, 0, 0, 0),
                       fontSize: 16,
                       fontWeight: FontWeight.bold),
                 ),
@@ -139,29 +133,14 @@ class _LoginState extends State<Login> {
                 SizedBox(
                   height: 10,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Squaretile(
-                      imagePath: 'assets/apple.png',
-                      height: 40,
-                    ),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    Squaretile(
-                      imagePath: 'assets/google.png',
-                      height: 30,
-                    )
-                  ],
-                ),
                 SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       'Not a member?',
-                      style: TextStyle(color: Colors.white),
+                      style:
+                          TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
                     ),
                     GestureDetector(
                       onTap: () {
@@ -221,6 +200,13 @@ class _LoginState extends State<Login> {
 
         //  ifis successful
         if (response.statusCode == 200) {
+          final Map<String, dynamic> responseData = json.decode(response.body);
+          var userId = responseData['user_id'];
+          var username = responseData['username'];
+
+          print('user id $userId');
+          print("username $username");
+          await saveUserData(userId, username);
           navigateToHome();
         } else {
           print('Failed to login: ${response.body}');
@@ -251,6 +237,22 @@ class _LoginState extends State<Login> {
         // showDialog(...);
       }
     }
+  }
+
+  Future<void> saveUserData(int userId, String username) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('userId', userId);
+    await prefs.setString('username', username);
+  }
+
+  Future<int?> getUserId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getInt('userId');
+  }
+
+  Future<String?> getUsername() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('username');
   }
 
   bool _isValidEmail(String email) {

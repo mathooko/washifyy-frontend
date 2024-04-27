@@ -3,14 +3,12 @@ import 'package:get/get.dart';
 import 'package:washifyy/controllers/HomeController.dart';
 import 'package:washifyy/views/checkout.dart';
 import 'package:washifyy/views/dashboard.dart';
-import 'package:washifyy/views/donations.dart';
 
 HomeController homeController = Get.put(HomeController());
 
 var Screens = [
   Dashboard(),
   Checkout(),
-  Donations(orderItems: [],),
 ];
 
 class Home extends StatelessWidget {
@@ -36,10 +34,6 @@ class Home extends StatelessWidget {
               BottomNavigationBarItem(
                 icon: Icon(Icons.shopping_bag),
                 label: 'Basket',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.credit_card),
-                label: 'Checkout',
               ),
             ],
           )),

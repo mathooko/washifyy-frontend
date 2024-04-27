@@ -1,15 +1,8 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
-
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:washifyy/configs/constants.dart';
-import 'package:washifyy/customs/custombutton.dart';
-import 'package:washifyy/customs/customtextfield.dart';
-import 'package:washifyy/customs/squaretile.dart';
 import 'package:http/http.dart' as http;
+import 'package:washifyy/customs/customtextfield.dart';
 
 class Sign extends StatefulWidget {
   Sign({Key? key}) : super(key: key);
@@ -41,7 +34,7 @@ class _SignUpState extends State<Sign> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 41, 41, 41),
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Center(
@@ -51,24 +44,22 @@ class _SignUpState extends State<Sign> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: 0),
+                  SizedBox(height: 20),
                   Image.asset(
                     'assets/logo.png',
                     height: 90,
                     color: Colors.deepPurple,
                   ),
-                  SizedBox(
-                    height: 0,
-                  ),
+                  SizedBox(height: 20),
                   Text(
                     "Welcome!!",
                     style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
+                      color: const Color.fromARGB(255, 0, 0, 0),
+                      fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 0),
+                  SizedBox(height: 20),
                   CustomTextField(
                       controller: usernameController,
                       hintText: 'John Doe',
@@ -80,7 +71,7 @@ class _SignUpState extends State<Sign> {
                         }
                         return null;
                       }),
-                  SizedBox(height: 0),
+                  SizedBox(height: 20),
                   CustomTextField(
                       controller: emailController,
                       hintText: 'Email',
@@ -95,7 +86,7 @@ class _SignUpState extends State<Sign> {
                         }
                         return null;
                       }),
-                  SizedBox(height: 0),
+                  SizedBox(height: 20),
                   CustomTextField(
                       controller: passwordController,
                       hintText: 'Password',
@@ -114,18 +105,16 @@ class _SignUpState extends State<Sign> {
                         if (value.length < 8) {
                           return 'Password must be at least 8 characters long';
                         }
-
                         if (!RegExp(r'[a-z]').hasMatch(value)) {
                           return 'Password must contain at least one lowercase letter';
                         }
-
                         if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]')
                             .hasMatch(value)) {
                           return 'Password must contain at least one special character';
                         }
                         return null;
                       }),
-                  SizedBox(height: 0),
+                  SizedBox(height: 20),
                   CustomTextField(
                       controller: password2Controller,
                       hintText: 'Confirm Password',
@@ -146,13 +135,13 @@ class _SignUpState extends State<Sign> {
                         }
                         return null;
                       }),
-                  SizedBox(height: 00),
+                  SizedBox(height: 20),
                   ElevatedButton(
                       onPressed: () {
                         _submitForm();
                       },
-                      child: Text('Login')),
-                  SizedBox(height: 0),
+                      child: Text('Sign up')),
+                  SizedBox(height: 20),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: Row(
@@ -182,28 +171,14 @@ class _SignUpState extends State<Sign> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Squaretile(
-                        imagePath: 'assets/apple.png',
-                        height: 40,
-                      ),
-                      SizedBox(width: 20),
-                      Squaretile(
-                        imagePath: 'assets/google.png',
-                        height: 30,
-                      )
-                    ],
-                  ),
                   SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         'Already a member?',
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(
+                            color: const Color.fromARGB(255, 0, 0, 0)),
                       ),
                       GestureDetector(
                         onTap: () {
@@ -226,10 +201,6 @@ class _SignUpState extends State<Sign> {
         ),
       ),
     );
-  }
-
-  void navigateToHome() {
-    Get.offNamed('/home');
   }
 
   void navigateToLogin() {
@@ -277,7 +248,7 @@ class _SignUpState extends State<Sign> {
 
           // Delay navigation to dashboard by 2 seconds (adjust as needed)
           await Future.delayed(Duration(seconds: 1));
-          navigateToHome();
+          navigateToLogin();
         } else {
           // Handle other status codes (e.g., display error message)
           print('Failed to register: ${response.body}');
