@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -48,7 +50,7 @@ class _CheckoutState extends State<Checkout> {
     }
   }
 
- Future<List<dynamic>> fetchOrderInfoFromAPI(List<int> itemIds) async {
+  Future<List<dynamic>> fetchOrderInfoFromAPI(List<int> itemIds) async {
     try {
       List<dynamic> orderInfo = [];
       for (int itemId in itemIds) {
@@ -69,7 +71,6 @@ class _CheckoutState extends State<Checkout> {
       return [];
     }
   }
-
 
   int calculateTotalPrice(Map<String, dynamic> item, bool ironingRequested) {
     int totalPrice = 0;
@@ -158,7 +159,8 @@ class _CheckoutState extends State<Checkout> {
                                 'Order Number: ${item['id']}',
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
-                            ),SizedBox(height: 5),
+                            ),
+                            SizedBox(height: 5),
                             Center(
                               child: Text(
                                 'Date: ${currentDate}',
@@ -191,8 +193,7 @@ class _CheckoutState extends State<Checkout> {
                                     children: [
                                       Text('Trousers'),
                                       Text(
-                                        '${item['trousers'] ?? 0} Ksh',
-                                      ),
+                                          '${calculateItemPrice("trousers", item['trousers'] ?? 0)}Ksh'),
                                     ],
                                   ),
                                   Divider(),
@@ -202,8 +203,7 @@ class _CheckoutState extends State<Checkout> {
                                     children: [
                                       Text('T-shirts'),
                                       Text(
-                                        '${item['tshirts'] ?? 0} Ksh',
-                                      ),
+                                          '${calculateItemPrice("tshirts", item['tshirts'] ?? 0)}Ksh'),
                                     ],
                                   ),
                                   Divider(),
@@ -213,8 +213,7 @@ class _CheckoutState extends State<Checkout> {
                                     children: [
                                       Text('Sweaters'),
                                       Text(
-                                        '${item['sweaters'] ?? 0} Ksh',
-                                      ),
+                                          '${calculateItemPrice("sweaters", item['sweaters'] ?? 0)}Ksh'),
                                     ],
                                   ),
                                   Divider(),
@@ -224,8 +223,7 @@ class _CheckoutState extends State<Checkout> {
                                     children: [
                                       Text('Shorts'),
                                       Text(
-                                        '${item['shorts'] ?? 0} Ksh',
-                                      ),
+                                          '${calculateItemPrice("shorts", item['shorts'] ?? 0)}Ksh'),
                                     ],
                                   ),
                                   Divider(),
@@ -235,8 +233,7 @@ class _CheckoutState extends State<Checkout> {
                                     children: [
                                       Text('Personal'),
                                       Text(
-                                        '${item['personal'] ?? 0} Ksh',
-                                      ),
+                                          '${calculateItemPrice("personal", item['personal'] ?? 0)}Ksh'),
                                     ],
                                   ),
                                   Divider(),
@@ -246,8 +243,7 @@ class _CheckoutState extends State<Checkout> {
                                     children: [
                                       Text('Duvet'),
                                       Text(
-                                        '${item['duvet'] ?? 0} Ksh',
-                                      ),
+                                          '${calculateItemPrice("duvet", item['duvet'] ?? 0)}Ksh')
                                     ],
                                   ),
                                   Divider(),
@@ -257,8 +253,7 @@ class _CheckoutState extends State<Checkout> {
                                     children: [
                                       Text('Shoes'),
                                       Text(
-                                        '${item['shoes'] ?? 0} Ksh',
-                                      ),
+                                          '${calculateItemPrice("shoes", item['shoes'] ?? 0)}Ksh')
                                     ],
                                   ),
                                   if (item['iron'] ?? false) Divider(),
