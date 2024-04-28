@@ -164,7 +164,7 @@ class _LoginState extends State<Login> {
   }
 
   void navigateToHome() {
-    Get.offNamed('/home');
+    Get.offNamed('/dashboard');
   }
 
   void navigateToSignup() {

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:washifyy/views/Cart.dart';
 
 class Order extends StatefulWidget {
   @override
@@ -24,17 +25,19 @@ class _OrderState extends State<Order> {
   bool _orderSubmitted = false;
   late SharedPreferences _prefs;
   late int _userId;
+  bool _includeIroning = false;
 
   @override
   void initState() {
     super.initState();
     _initPreferences();
   }
-void _initPreferences() async {
-  _prefs = await SharedPreferences.getInstance();
-  _userId = _prefs.getInt('userId') ?? 0; // Treat as integer, default to 0 if null
-}
 
+  void _initPreferences() async {
+    _prefs = await SharedPreferences.getInstance();
+    _userId =
+        _prefs.getInt('userId') ?? 0; // Treat as integer, default to 0 if null
+  }
 
   void navigateToCart() {
     Get.offNamed('/cart');
@@ -54,7 +57,7 @@ void _initPreferences() async {
     }
   }
 
-  Future<void> _submitOrder() async {
+Future<void> _submitOrder() async {
     if (_orderSubmitted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('You have already submitted an order.')),
@@ -65,6 +68,10 @@ void _initPreferences() async {
     final Uri apiUrl = Uri.parse('http://127.0.0.1:8000/customers/services/');
 
     try {
+      // Convert null quantities to 0
+      Map<String, int?> quantities = Map.from(_quantities);
+      quantities.updateAll((key, value) => value ?? 0);
+
       final response = await http.post(
         apiUrl,
         headers: <String, String>{
@@ -72,15 +79,40 @@ void _initPreferences() async {
         },
         body: jsonEncode({
           'user': _userId,
-          'items': _quantities,
+          'trousers': quantities['trousers'],
+          'tshirts': quantities['tshirts'],
+          'sweaters': quantities['sweaters'],
+          'shorts': quantities['shorts'],
+          'personal': quantities['personal'],
+          'duvet': quantities['duvet'],
+          'shoes': quantities['shoes'],
+          'iron': _includeIroning,
         }),
       );
+
+      // Log the request body for debugging
+      print('Request Body: ${jsonEncode({
+            'user': _userId,
+            'trousers': quantities['trousers'],
+            'tshirts': quantities['tshirts'],
+            'sweaters': quantities['sweaters'],
+            'shorts': quantities['shorts'],
+            'personal': quantities['personal'],
+            'duvet': quantities['duvet'],
+            'shoes': quantities['shoes'],
+            'iron': _includeIroning,
+          })}');
 
       if (response.statusCode == 201) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Order placed successfully!')),
         );
-        navigateToCart();
+
+        // Navigate to the Cart page
+        Navigator.popUntil(context, ModalRoute.withName('/'));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => Cart()));
+
         setState(() {
           _orderSubmitted = true;
         });
@@ -96,11 +128,13 @@ void _initPreferences() async {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Checkout'),
+        title: Text('Make an Order'),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(20),
@@ -122,10 +156,20 @@ void _initPreferences() async {
               },
             ),
             SizedBox(height: 20),
+            CheckboxListTile(
+              title: Text('Include Ironing'),
+              value: _includeIroning,
+              onChanged: (value) {
+                setState(() {
+                  _includeIroning = value ?? false;
+                });
+              },
+            ),
+            SizedBox(height: 20),
             Center(
               child: ElevatedButton(
                 onPressed: _submitOrder,
-                child: Text('Proceed to Checkout'),
+                child: Text('Make Order'),
               ),
             ),
           ],

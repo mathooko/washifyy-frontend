@@ -1,51 +1,55 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:washifyy/controllers/HomeController.dart';
+import 'package:washifyy/controllers/homecontroller.dart';
+import 'package:washifyy/views/Cart.dart';
 import 'package:washifyy/views/checkout.dart';
 import 'package:washifyy/views/dashboard.dart';
 
+
+
 HomeController homeController = Get.put(HomeController());
 
-var Screens = [
-  Dashboard(),
-  Checkout(),
-];
+class Home_No_app extends StatelessWidget {
+  final Widget body;
 
-class Home extends StatelessWidget {
-  const Home({Key? key}) : super(key: key);
+  Home_No_app({required this.body});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: Obx(() => BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            currentIndex: homeController.selectedPage.value,
-            selectedItemColor: Colors.deepPurple,
-            unselectedItemColor: Colors.black,
-            selectedIconTheme: IconThemeData(color: Colors.deepPurple),
-            onTap: (index) {
-              homeController.selectedPage.value = index;
-            },
-            items: [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: 'Home',
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: homeController.selectedPage.value,
+          onTap: (index) {
+            homeController.selectedPage.value = index;
+            switch (index) {
+              case 0:
+                Get.to(() => Dashboard());
+                break;
+              case 1:
+                Get.to(() => Cart());
+                break;
+              case 2:
+                Get.to(() => Checkout());
+                break;
+            }
+          },
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.home,
               ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.shopping_bag),
-                label: 'Basket',
-              ),
-            ],
-          )),
-      body: Column(
-        children: [
-          Expanded(
-            child: Obx(
-              () => Center(child: Screens[homeController.selectedPage.value]),
+              label: 'Home',
             ),
-          ),
-        ],
-      ),
-    );
+              BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_bag),
+              label: 'Cart',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_cart),
+              label: 'Checkout',
+            ),
+          ],
+        ),
+        body: body);
   }
 }

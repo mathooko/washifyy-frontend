@@ -1,9 +1,8 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:washifyy/views/home.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -12,11 +11,13 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   late Map<String, dynamic> username = {};
+  List<int> checkedOutItemIds = [];
 
   @override
   void initState() {
     super.initState();
     fetchUsername();
+    fetchCheckedOutItems();
   }
 
   Future<void> fetchUsername() async {
@@ -37,13 +38,25 @@ class _DashboardState extends State<Dashboard> {
     return prefs.getString('username');
   }
 
+  Future<void> fetchCheckedOutItems() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      checkedOutItemIds = prefs
+              .getStringList('checkedOutItemIds')
+              ?.map((id) => int.parse(id))
+              .toList() ??
+          [];
+    } catch (e) {
+      print('Error fetching checked-out items: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // Get the current date
     String currentDate = DateFormat.yMMMMd().format(DateTime.now());
 
-    return Scaffold(
-      backgroundColor: Colors.deepPurple[600],
+    return Home_No_app(
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -55,9 +68,9 @@ class _DashboardState extends State<Dashboard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Hi, ${username['username']}',
+                      'Hi, ${username['username']}, welcome',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.deepPurple,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
@@ -65,7 +78,7 @@ class _DashboardState extends State<Dashboard> {
                     SizedBox(height: 5),
                     Text(
                       currentDate,
-                      style: TextStyle(color: Colors.deepPurple[50]),
+                      style: TextStyle(color: Colors.deepPurple),
                     ),
                   ],
                 ),
@@ -86,8 +99,9 @@ class _DashboardState extends State<Dashboard> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Click to start',
+                            'Tap to make an order',
                             style: TextStyle(
+                              color: Colors.deepPurple,
                               fontWeight: FontWeight.bold,
                               fontSize: 20,
                             ),
@@ -96,16 +110,15 @@ class _DashboardState extends State<Dashboard> {
                         ],
                       ),
                     ),
+                    SizedBox(height: 20),
                     GridView.count(
+                      crossAxisCount: 2,
                       shrinkWrap: true,
-                      crossAxisCount: 1,
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 10,
-                      padding: EdgeInsets.all(50),
+                      physics: NeverScrollableScrollPhysics(),
                       children: [
                         GestureDetector(
                           onTap: () {
-                            navigateToOrder();
+                            navigateToOrder(); // Wash and Fold
                           },
                           child: _buildServiceCard(
                             icon: Icons.local_laundry_service,
@@ -116,6 +129,28 @@ class _DashboardState extends State<Dashboard> {
                       ],
                     ),
                     SizedBox(height: 20),
+                    Text(
+                      'Orders Checked Out',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                        color: Color.fromARGB(255, 138, 91, 219),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: checkedOutItemIds.length,
+                      itemBuilder: (context, index) {
+                        final orderId = checkedOutItemIds[index];
+                        return GestureDetector(
+                          onTap: () {
+                            navigateToCheckout(orderId);
+                          },
+                          child: _buildOrderItem(orderId: orderId),
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -141,14 +176,14 @@ class _DashboardState extends State<Dashboard> {
         children: [
           Icon(
             icon,
-            size: 50,
+            size: 100, // Increase the size of the icon
             color: color,
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 20), // Increase the spacing
           Text(
             label,
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 24, // Increase the font size
               fontWeight: FontWeight.bold,
               color: color,
             ),
@@ -159,8 +194,7 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget _buildOrderItem({
-    required String itemName,
-    required int quantity,
+    required int orderId,
   }) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 5),
@@ -171,11 +205,7 @@ class _DashboardState extends State<Dashboard> {
       ),
       child: ListTile(
         title: Text(
-          itemName,
-          style: TextStyle(color: Colors.white),
-        ),
-        subtitle: Text(
-          'Quantity: $quantity',
+          'Order Number: $orderId',
           style: TextStyle(color: Colors.white),
         ),
       ),
@@ -184,5 +214,9 @@ class _DashboardState extends State<Dashboard> {
 
   void navigateToOrder() {
     Get.toNamed("/order");
+  }
+
+  void navigateToCheckout(int orderId) {
+    Get.toNamed("/checkout", arguments: orderId);
   }
 }
